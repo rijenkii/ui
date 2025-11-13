@@ -40,27 +40,25 @@ export function useComponentIcons(componentProps: MaybeRefOrGetter<UseComponentI
 
   const props = computed(() => toValue(componentProps))
 
-  const isLeading = computed(() => (props.value.icon && props.value.leading) || (props.value.icon && !props.value.trailing) || (props.value.loading && !props.value.trailing) || !!props.value.leadingIcon)
-  const isTrailing = computed(() => (props.value.icon && props.value.trailing) || (props.value.loading && props.value.trailing) || !!props.value.trailingIcon)
+  const regularLeadingIcon = computed(() => props.value.leadingIcon ?? (props.value.leading || !props.value.trailing ? props.value.icon : undefined))
+  const regularTrailingIcon = computed(() => props.value.trailingIcon ?? (props.value.trailing ? props.value.icon : undefined))
 
-  const leadingIconName = computed(() => {
-    if (props.value.loading) {
-      return props.value.loadingIcon || appConfig.ui.icons.loading
+  const loadingIcon = computed(() => {
+    const iconName = props.value.loading ? (props.value.loadingIcon || appConfig.ui.icons.loading) : undefined;
+
+    if (!props.value.trailing) {
+      return { leading: iconName }
+    } else {
+      return { trailing: iconName }
     }
+  });
 
-    return props.value.leadingIcon || props.value.icon
-  })
-  const trailingIconName = computed(() => {
-    if (props.value.loading && !isLeading.value) {
-      return props.value.loadingIcon || appConfig.ui.icons.loading
-    }
-
-    return props.value.trailingIcon || props.value.icon
-  })
+  const leadingIconName = computed(() => loadingIcon.value.leading ?? regularLeadingIcon.value)
+  const trailingIconName = computed(() => loadingIcon.value.trailing ?? regularTrailingIcon.value)
 
   return {
-    isLeading,
-    isTrailing,
+    isLeading: computed(() => leadingIconName.value !== undefined),
+    isTrailing: computed(() => trailingIconName.value !== undefined),
     leadingIconName,
     trailingIconName
   }
