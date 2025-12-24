@@ -44,20 +44,26 @@ export function useComponentIcons(componentProps: MaybeRefOrGetter<UseComponentI
   const regularTrailingIcon = computed(() => props.value.trailingIcon ?? (props.value.trailing ? props.value.icon : undefined))
 
   const loadingIcon = computed(() => {
-    const iconName = props.value.loading ? (props.value.loadingIcon || appConfig.ui.icons.loading) : undefined;
+    const iconName = props.value.loading ? (props.value.loadingIcon || appConfig.ui.icons.loading) : undefined
 
     if (!props.value.trailing) {
       return { leading: iconName }
     } else {
       return { trailing: iconName }
     }
-  });
+  })
 
   const leadingIconName = computed(() => loadingIcon.value.leading ?? regularLeadingIcon.value)
   const trailingIconName = computed(() => loadingIcon.value.trailing ?? regularTrailingIcon.value)
 
   return {
+    /**
+     * @deprecated check for truthfulness of `leadingIconName` instead.
+     */
     isLeading: computed(() => leadingIconName.value !== undefined),
+    /**
+     * @deprecated check for truthfulness of `trailingIconName` instead.
+     */
     isTrailing: computed(() => trailingIconName.value !== undefined),
     leadingIconName,
     trailingIconName

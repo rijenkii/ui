@@ -83,7 +83,7 @@ const isLoading = computed(() => {
   return props.loading || (props.loadingAuto && (loadingAutoState.value || (formLoading?.value && props.type === 'submit')))
 })
 
-const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(
+const { leadingIconName, trailingIconName } = useComponentIcons(
   computed(() => ({ ...props, loading: isLoading.value }))
 )
 
@@ -108,8 +108,8 @@ const ui = computed(() => tv({
   loading: isLoading.value,
   block: props.block,
   square: props.square || (!slots.default && !props.label),
-  leading: isLeading.value,
-  trailing: isTrailing.value,
+  leading: !!leadingIconName.value,
+  trailing: !!trailingIconName.value,
   fieldGroup: orientation.value
 }))
 </script>
@@ -134,7 +134,7 @@ const ui = computed(() => tv({
       @click="onClickWrapper"
     >
       <slot name="leading" :ui="ui">
-        <UIcon v-if="isLeading && leadingIconName" :name="leadingIconName" data-slot="leadingIcon" :class="ui.leadingIcon({ class: props.ui?.leadingIcon, active })" />
+        <UIcon v-if="leadingIconName" :name="leadingIconName" data-slot="leadingIcon" :class="ui.leadingIcon({ class: props.ui?.leadingIcon, active })" />
         <UAvatar v-else-if="!!avatar" :size="((props.ui?.leadingAvatarSize || ui.leadingAvatarSize()) as AvatarProps['size'])" v-bind="avatar" data-slot="leadingAvatar" :class="ui.leadingAvatar({ class: props.ui?.leadingAvatar, active })" />
       </slot>
 
@@ -145,7 +145,7 @@ const ui = computed(() => tv({
       </slot>
 
       <slot name="trailing" :ui="ui">
-        <UIcon v-if="isTrailing && trailingIconName" :name="trailingIconName" data-slot="trailingIcon" :class="ui.trailingIcon({ class: props.ui?.trailingIcon, active })" />
+        <UIcon v-if="trailingIconName" :name="trailingIconName" data-slot="trailingIcon" :class="ui.trailingIcon({ class: props.ui?.trailingIcon, active })" />
       </slot>
     </ULinkBase>
   </ULink>
